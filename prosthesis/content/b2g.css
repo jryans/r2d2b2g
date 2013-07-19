@@ -285,26 +285,30 @@ textarea:active {
   font-family: "MozTT";
   font-style: normal;
   font-weight: 200;
-  src: url("resource://prosthesis/content/fonts/MozTT-Light.ttf");
+  src: local("MozTT Light"),
+       url("resource://prosthesis/content/fonts/MozTT-Light.ttf");
 }
 
 @font-face {
   font-family: "MozTT";
   font-style: normal;
   font-weight: 400;
-  src: url("resource://prosthesis/content/fonts/MozTT-Regular.ttf");
+  src: local("MozTT"),
+       url("resource://prosthesis/content/fonts/MozTT-Regular.ttf");
 }
 
 @font-face {
   font-family: "MozTT";
   font-style: normal;
   font-weight: 500;
-  src: url("resource://prosthesis/content/fonts/MozTT-Medium.ttf");
+  src: local("MozTT Medium"),
+       url("resource://prosthesis/content/fonts/MozTT-Medium.ttf");
 }
 
 @font-face {
   font-family: "MozTT";
   font-style: normal;
   font-weight: 700;
-  src: url("resource://prosthesis/content/fonts/MozTT-Bold.ttf");
+  src: local("MozTT Bold"),
+       url("resource://prosthesis/content/fonts/MozTT-Bold.ttf");
 }
