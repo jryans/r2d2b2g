@@ -1,0 +1,31 @@
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 200;
+  src: local("MozTT Light"),
+       url("resource://prosthesis/content/fonts/MozTT-Light.ttf");
+}
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 400;
+  src: local("MozTT"),
+       url("resource://prosthesis/content/fonts/MozTT-Regular.ttf");
+}
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 500;
+  src: local("MozTT Medium"),
+       url("resource://prosthesis/content/fonts/MozTT-Medium.ttf");
+}
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 700;
+  src: local("MozTT Bold"),
+       url("resource://prosthesis/content/fonts/MozTT-Bold.ttf");
+}

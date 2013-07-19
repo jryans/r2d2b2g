@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+@import url("chrome://prosthesis/content/fonts/fonts.css");
+
 @namespace url("http://www.w3.org/1999/xhtml");
 @namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
@@ -279,36 +281,4 @@ select:active,
 label:active,
 textarea:active {
   background-color: rgba(141, 184, 216, 0.5);
-}
-
-@font-face {
-  font-family: "MozTT";
-  font-style: normal;
-  font-weight: 200;
-  src: local("MozTT Light"),
-       url("resource://prosthesis/content/fonts/MozTT-Light.ttf");
-}
-
-@font-face {
-  font-family: "MozTT";
-  font-style: normal;
-  font-weight: 400;
-  src: local("MozTT"),
-       url("resource://prosthesis/content/fonts/MozTT-Regular.ttf");
-}
-
-@font-face {
-  font-family: "MozTT";
-  font-style: normal;
-  font-weight: 500;
-  src: local("MozTT Medium"),
-       url("resource://prosthesis/content/fonts/MozTT-Medium.ttf");
-}
-
-@font-face {
-  font-family: "MozTT";
-  font-style: normal;
-  font-weight: 700;
-  src: local("MozTT Bold"),
-       url("resource://prosthesis/content/fonts/MozTT-Bold.ttf");
 }
