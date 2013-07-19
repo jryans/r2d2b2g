@@ -280,3 +280,31 @@ label:active,
 textarea:active {
   background-color: rgba(141, 184, 216, 0.5);
 }
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 200;
+  src: url("resource://prosthesis/content/fonts/MozTT-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 400;
+  src: url("resource://prosthesis/content/fonts/MozTT-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 500;
+  src: url("resource://prosthesis/content/fonts/MozTT-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MozTT";
+  font-style: normal;
+  font-weight: 700;
+  src: url("resource://prosthesis/content/fonts/MozTT-Bold.ttf") format("truetype");
+}
