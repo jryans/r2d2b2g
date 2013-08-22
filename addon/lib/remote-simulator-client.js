@@ -485,6 +485,8 @@ const RemoteSimulatorClient = Class({
     // Ignore eventual zombie instances of b2g that are left over
     args.push("-no-remote");
 
+    args.push("-jsconsole");
+
     return args;
   },
 
