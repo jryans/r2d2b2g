@@ -1,4 +1,4 @@
-// mozilla-central: toolkit/devtools/server/actors/webconsole.js@89294cd501d9
+// mozilla-central: toolkit/devtools/server/actors/webconsole.js@3f8a99f7e0ea
 /* -*- Mode: js2; js2-basic-offset: 2; indent-tabs-mode: nil; -*- */
 /* vim: set ts=2 et sw=2 tw=80: */
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -13,28 +13,32 @@ let Cu = Components.utils;
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
-let devtools = Cu.import("chrome://prosthesis/content/devtools/Loader.jsm", {}).devtools;
-
 XPCOMUtils.defineLazyModuleGetter(this, "Services",
                                   "resource://gre/modules/Services.jsm");
 
+XPCOMUtils.defineLazyModuleGetter(this, "WebConsoleUtils",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetter(this, "ConsoleServiceListener",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetter(this, "ConsoleAPIListener",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetter(this, "ConsoleProgressListener",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetter(this, "JSTermHelpers",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetter(this, "JSPropertyProvider",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
+XPCOMUtils.defineLazyModuleGetter(this, "NetworkMonitor",
+                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+
 XPCOMUtils.defineLazyModuleGetter(this, "ConsoleAPIStorage",
                                   "resource://gre/modules/ConsoleAPIStorage.jsm");
-
-for (let name of ["WebConsoleUtils", "ConsoleServiceListener",
-                  "ConsoleAPIListener", "ConsoleProgressListener",
-                  "JSTermHelpers", "JSPropertyProvider", "NetworkMonitor"]) {
-  Object.defineProperty(this, name, {
-    get: function(prop) {
-      if (prop == "WebConsoleUtils") {
-        prop = "Utils";
-      }
-      return devtools.require("devtools/toolkit/webconsole/utils")[prop];
-    }.bind(null, name),
-    configurable: true,
-    enumerable: true
-  });
-}
 
 
 /**
@@ -1001,7 +1005,7 @@ WebConsoleActor.prototype =
    * is about to be recorded.
    *
    * @see NetworkEventActor
-   * @see NetworkMonitor from webconsole/utils.js
+   * @see NetworkMonitor from WebConsoleUtils.jsm
    *
    * @param object aEvent
    *        The initial network request event information.
