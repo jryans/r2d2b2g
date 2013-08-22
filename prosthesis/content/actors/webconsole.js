@@ -470,6 +470,7 @@ WebConsoleActor.prototype =
    */
   onGetCachedMessages: function WCA_onGetCachedMessages(aRequest)
   {
+    let self = this;
     let types = aRequest.messageTypes;
     if (!types) {
       return {
@@ -489,8 +490,8 @@ WebConsoleActor.prototype =
           }
           let cache = this.consoleAPIListener
                       .getCachedMessages(!this.parentActor.isRootActor);
-          cache.forEach((aMessage) => {
-            let message = this.prepareConsoleMessageForRemote(aMessage);
+          cache.forEach(function (aMessage) {
+            let message = self.prepareConsoleMessageForRemote(aMessage);
             message._type = type;
             messages.push(message);
           });
@@ -502,16 +503,16 @@ WebConsoleActor.prototype =
           }
           let cache = this.consoleServiceListener
                       .getCachedMessages(!this.parentActor.isRootActor);
-          cache.forEach((aMessage) => {
+          cache.forEach(function (aMessage) {
             let message = null;
             if (aMessage instanceof Ci.nsIScriptError) {
-              message = this.preparePageErrorForRemote(aMessage);
+              message = self.preparePageErrorForRemote(aMessage);
               message._type = type;
             }
             else {
               message = {
                 _type: "LogMessage",
-                message: this._createStringGrip(aMessage.message),
+                message: self._createStringGrip(aMessage.message),
                 timeStamp: aMessage.timeStamp,
               };
             }
@@ -611,7 +612,9 @@ WebConsoleActor.prototype =
       JSTermHelpers(helpers);
 
       let helperNames = Object.getOwnPropertyNames(helpers.sandbox);
-      matches = matches.concat(helperNames.filter(n => n.startsWith(result.matchProp)));
+      matches = matches.concat(helperNames.filter(function(n) {
+        return n.startsWith(result.matchProp);
+      }));
     }
 
     return {
@@ -1114,14 +1117,15 @@ WebConsoleActor.prototype =
   prepareConsoleMessageForRemote:
   function WCA_prepareConsoleMessageForRemote(aMessage)
   {
+    let self = this;
     let result = WebConsoleUtils.cloneObject(aMessage);
     delete result.wrappedJSObject;
     delete result.ID;
     delete result.innerID;
 
-    result.arguments = Array.map(aMessage.arguments || [], (aObj) => {
-      let dbgObj = this.makeDebuggeeValue(aObj, true);
-      return this.createValueGrip(dbgObj);
+    result.arguments = Array.map(aMessage.arguments || [], function (aObj) {
+      let dbgObj = self.makeDebuggeeValue(aObj, true);
+      return self.createValueGrip(dbgObj);
     });
 
     return result;
