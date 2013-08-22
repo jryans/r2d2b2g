@@ -1,3 +1,4 @@
+// mozilla-central: toolkit/devtools/Loader.jsm@89294cd501d9
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -8,7 +9,9 @@
  * Manages the addon-sdk loader instance used to load the developer tools.
  */
 
-let { classes: Cc, interfaces: Ci, utils: Cu } = Components;
+let Cc = Components.classes;
+let Ci = Components.interfaces;
+let Cu = Components.utils;
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 Cu.import("resource://gre/modules/Services.jsm");
