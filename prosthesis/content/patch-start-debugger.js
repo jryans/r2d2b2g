@@ -14,6 +14,9 @@
     // Register our copy of styleeditor until it gets uplifted to b2g18
     DebuggerServer.addActors('chrome://prosthesis/content/actors/styleeditor.js');
     DebuggerServer.addTabActor(DebuggerServer.StyleEditorActor, "styleEditorActor");
+    DebuggerServer.removeTabActor(DebuggerServer.WebConsoleActor);
+    DebuggerServer.removeGlobalActor(DebuggerServer.WebConsoleActor);
+    DebuggerServer.addActors('chrome://prosthesis/content/actors/webconsole.js');
   };
 
   // allow remote debugger connection without any user confirmation

@@ -13,7 +13,9 @@ let Cu = Components.utils;
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 
-let devtools = Cu.import("resource://gre/modules/devtools/Loader.jsm", {}).devtools;
+let devtools = Cu.import("chrome://prosthesis/content/devtools/Loader.jsm", {}).devtools;
+
+dump("HELLO!");
 
 XPCOMUtils.defineLazyModuleGetter(this, "Services",
                                   "resource://gre/modules/Services.jsm");
