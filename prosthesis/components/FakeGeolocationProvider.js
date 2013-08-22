@@ -4,8 +4,8 @@
 
 /* The FakeGeolocationProvider relies on observing r2d2b2g:update-geolocation
  * notifications from content/shell.js, when the user changes their custom
- * coordinates, AND from content/dbg-geolocation-actors.js, when the user wants
- * to use their current coordinates.  The current coordinates are never fetched
+ * coordinates, AND from content/actors/geolocation.js, when the user wants to
+ * use their current coordinates.  The current coordinates are never fetched
  * until the user has explicitly selected that they want to share them.
  * shell.js will send a r2d2b2g:enable-real-geolocation notification that is
  * observed by dbg-geolocation-actors.js.  dbg-geolocation-actors.js uses
