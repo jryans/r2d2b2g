@@ -17,25 +17,25 @@ XPCOMUtils.defineLazyModuleGetter(this, "Services",
                                   "resource://gre/modules/Services.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "WebConsoleUtils",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "ConsoleServiceListener",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "ConsoleAPIListener",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "ConsoleProgressListener",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "JSTermHelpers",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "JSPropertyProvider",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "NetworkMonitor",
-                                  "resource://gre/modules/devtools/WebConsoleUtils.jsm");
+                                  "chrome://prosthesis/content/devtools/webconsole/WebConsoleUtils.jsm");
 
 XPCOMUtils.defineLazyModuleGetter(this, "ConsoleAPIStorage",
                                   "resource://gre/modules/ConsoleAPIStorage.jsm");
@@ -59,7 +59,7 @@ function WebConsoleActor(aConnection, aParentActor)
   this._actorPool = new ActorPool(this.conn);
   this.conn.addActorPool(this._actorPool);
 
-  this._prefs = {};
+  /*this._prefs = {};
 
   this.dbg = new Debugger();
 
@@ -74,7 +74,7 @@ function WebConsoleActor(aConnection, aParentActor)
   if (this.parentActor.isRootActor) {
     Services.obs.addObserver(this._onObserverNotification,
                              "last-pb-context-exited", false);
-  }
+  }*/
 }
 
 WebConsoleActor.prototype =
