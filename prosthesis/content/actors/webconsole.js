@@ -215,7 +215,26 @@ WebConsoleActor.prototype =
     return { actor: this.actorID };
   },
 
-  hasNativeConsoleAPI: BrowserTabActor.prototype.hasNativeConsoleAPI,
+  // Taken from BrowserTabActor in
+  // toolkit/devtools/server/actors/webbrowser.js@@3f8a99f7e0ea
+  /**
+   * Tells if the window.console object is native or overwritten by script in
+   * the page.
+   *
+   * @param nsIDOMWindow aWindow
+   *        The window object you want to check.
+   * @return boolean
+   *         True if the window.console object is native, or false otherwise.
+   */
+  hasNativeConsoleAPI: function WCA_hasNativeConsoleAPI(aWindow) {
+    let isNative = false;
+    try {
+      let console = aWindow.wrappedJSObject.console;
+      isNative = "__mozillaConsole__" in console;
+    }
+    catch (ex) { }
+    return isNative;
+  },
 
   _createValueGrip: ThreadActor.prototype.createValueGrip,
   _stringIsLong: ThreadActor.prototype._stringIsLong,
