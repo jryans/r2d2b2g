@@ -1029,12 +1029,13 @@ ConsoleServiceListener.prototype =
    */
   getCachedMessages: function CSL_getCachedMessages(aIncludePrivate = false)
   {
+    let self = this;
     let errors = Services.console.getMessageArray() || [];
 
     // if !this.window, we're in a browser console. Still need to filter
     // private messages.
     if (!this.window) {
-      return errors.filter((aError) => {
+      return errors.filter(function (aError) {
         if (aError instanceof Ci.nsIScriptError) {
           if (!aIncludePrivate && aError.isFromPrivateWindow) {
             return false;
@@ -1047,14 +1048,14 @@ ConsoleServiceListener.prototype =
 
     let ids = WebConsoleUtils.getInnerWindowIDsForFrames(this.window);
 
-    return errors.filter((aError) => {
+    return errors.filter(function (aError) {
       if (aError instanceof Ci.nsIScriptError) {
         if (!aIncludePrivate && aError.isFromPrivateWindow) {
           return false;
         }
         if (ids &&
             (ids.indexOf(aError.innerWindowID) == -1 ||
-             !this.isCategoryAllowed(aError.category))) {
+             !self.isCategoryAllowed(aError.category))) {
           return false;
         }
       }
@@ -1179,7 +1180,7 @@ ConsoleAPIListener.prototype =
       messages = ConsoleAPIStorage.getEvents();
     } else {
       let ids = WebConsoleUtils.getInnerWindowIDsForFrames(this.window);
-      ids.forEach((id) => {
+      ids.forEach(function (id) {
         messages = messages.concat(ConsoleAPIStorage.getEvents(id));
       });
     }
@@ -1188,7 +1189,9 @@ ConsoleAPIListener.prototype =
       return messages;
     }
 
-    return messages.filter((m) => !m.private);
+    return messages.filter(function (m) {
+      return !m.private;
+    });
   },
 
   /**
