@@ -56,10 +56,41 @@ function WebConsoleActor(aConnection, aParentActor)
   this.conn = aConnection;
   this.parentActor = aParentActor;
 
+  // b2g18 requires this fix which was made in bug 863818 to wire the console
+  // actor to the correct window.  The following substitutions were made based
+  // on tab actor properties that do not exist in b2g18:
+  //   * this.window: this.parentActor.window changed to this._window
+  //   * this.parentActor.isRootActor changed to this._isGlobalActor
+  if (aParentActor instanceof BrowserTabActor &&
+      aParentActor.browser instanceof Ci.nsIDOMWindow) {
+    // B2G tab actor |this.browser| points to a DOM chrome window, not
+    // a xul:browser element.
+    //
+    // TODO: bug 802246 - b2g has only one tab actor, the shell.xul, which is
+    // not properly supported by the console actor - see bug for details.
+    //
+    // Below we work around the problem: selecting the shell.xul tab actor
+    // behaves as if the user picked the global console actor.
+    //this._window = aParentActor.browser;
+    this._window = Services.wm.getMostRecentWindow("navigator:browser");
+    this._isGlobalActor = true;
+  }
+  else if (aParentActor instanceof BrowserTabActor &&
+           aParentActor.browser instanceof Ci.nsIDOMElement) {
+    // Firefox for desktop tab actor |this.browser| points to the xul:browser
+    // element.
+    this._window = aParentActor.browser.contentWindow;
+  }
+  else {
+    // In all other cases we should behave as the global console actor.
+    this._window = Services.wm.getMostRecentWindow("navigator:browser");
+    this._isGlobalActor = true;
+  }
+
   this._actorPool = new ActorPool(this.conn);
   this.conn.addActorPool(this._actorPool);
 
-  /*this._prefs = {};
+  this._prefs = {};
 
   this.dbg = new Debugger();
 
@@ -71,14 +102,21 @@ function WebConsoleActor(aConnection, aParentActor)
   this._onObserverNotification = this._onObserverNotification.bind(this);
   Services.obs.addObserver(this._onObserverNotification,
                            "inner-window-destroyed", false);
-  if (this.parentActor.isRootActor) {
+  if (this._isGlobalActor) {
     Services.obs.addObserver(this._onObserverNotification,
                              "last-pb-context-exited", false);
-  }*/
+  }
 }
 
 WebConsoleActor.prototype =
 {
+  /**
+   * Tells if this Web Console actor is a global actor or not.
+   * @private
+   * @type boolean
+   */
+  _isGlobalActor: false,
+
   /**
    * Debugger instance.
    *
@@ -138,7 +176,9 @@ WebConsoleActor.prototype =
    * The content window we work with.
    * @type nsIDOMWindow
    */
-  get window() this.parentActor.window,
+  get window() this._window,
+
+  _window: null,
 
   /**
    * The ConsoleServiceListener instance.
@@ -206,7 +246,7 @@ WebConsoleActor.prototype =
     this.conn.removeActorPool(this._actorPool);
     Services.obs.removeObserver(this._onObserverNotification,
                                 "inner-window-destroyed");
-    if (this.parentActor.isRootActor) {
+    if (this._isGlobalActor) {
       Services.obs.removeObserver(this._onObserverNotification,
                                   "last-pb-context-exited");
     }
@@ -355,7 +395,7 @@ WebConsoleActor.prototype =
   onStartListeners: function WCA_onStartListeners(aRequest)
   {
     let startedListeners = [];
-    let window = !this.parentActor.isRootActor ? this.window : null;
+    let window = !this._isGlobalActor ? this.window : null;
 
     while (aRequest.listeners.length > 0) {
       let listener = aRequest.listeners.shift();
@@ -489,7 +529,7 @@ WebConsoleActor.prototype =
             break;
           }
           let cache = this.consoleAPIListener
-                      .getCachedMessages(!this.parentActor.isRootActor);
+                      .getCachedMessages(!this._isGlobalActor);
           cache.forEach(function (aMessage) {
             let message = self.prepareConsoleMessageForRemote(aMessage);
             message._type = type;
@@ -502,7 +542,7 @@ WebConsoleActor.prototype =
             break;
           }
           let cache = this.consoleServiceListener
-                      .getCachedMessages(!this.parentActor.isRootActor);
+                      .getCachedMessages(!this._isGlobalActor);
           cache.forEach(function (aMessage) {
             let message = null;
             if (aMessage instanceof Ci.nsIScriptError) {
@@ -630,10 +670,10 @@ WebConsoleActor.prototype =
   onClearMessagesCache: function WCA_onClearMessagesCache()
   {
     // TODO: Bug 717611 - Web Console clear button does not clear cached errors
-    let windowId = !this.parentActor.isRootActor ?
+    let windowId = !this._isGlobalActor ?
                    WebConsoleUtils.getInnerWindowId(this.window) : null;
     ConsoleAPIStorage.clearEvents(windowId);
-    if (this.parentActor.isRootActor) {
+    if (this._isGlobalActor) {
       Services.console.logStringMessage(null); // for the Error Console
       Services.console.reset();
     }
