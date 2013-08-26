@@ -40,7 +40,6 @@ XPCOMUtils.defineLazyModuleGetter(this, "NetworkMonitor",
 XPCOMUtils.defineLazyModuleGetter(this, "ConsoleAPIStorage",
                                   "resource://gre/modules/ConsoleAPIStorage.jsm");
 
-
 /**
  * The WebConsoleActor implements capabilities needed for the Web Console
  * feature.
@@ -56,6 +55,7 @@ function WebConsoleActor(aConnection, aParentActor)
   this.conn = aConnection;
   this.parentActor = aParentActor;
 
+  /*
   // b2g18 requires this fix which was made in bug 863818 to wire the console
   // actor to the correct window.  The following substitutions were made based
   // on tab actor properties that do not exist in b2g18:
@@ -86,6 +86,29 @@ function WebConsoleActor(aConnection, aParentActor)
     this._window = Services.wm.getMostRecentWindow("navigator:browser");
     this._isGlobalActor = true;
   }
+  */
+
+  dump("aParentActor: " + aParentActor.toString() + "\n");
+  dump("aParentActor.browser: " + aParentActor.browser.toString() + "\n");
+  dump("aParentActor.browser.contentWindow: " + aParentActor.browser.contentWindow.toString() + "\n");
+  dump("aParentActor.browser.contentWindow.wrappedJSObject: " + aParentActor.browser.contentWindow.wrappedJSObject.toString() + "\n");
+
+  dump("aParentActor instanceof BrowserTabActor: " + (aParentActor instanceof BrowserTabActor) + "\n");
+  dump("aParentActor.browser instanceof Ci.nsIDOMWindow: " + (aParentActor.browser instanceof Ci.nsIDOMWindow) + "\n");
+  dump("aParentActor.browser instanceof Ci.nsIDOMElement: " + (aParentActor.browser instanceof Ci.nsIDOMElement) + "\n");
+
+  //this._window = Services.wm.getMostRecentWindow("navigator:browser");
+  this._window = aParentActor.browser.contentWindow.wrappedJSObject;
+  this._isGlobalActor = false;
+
+  //this._window = this._window.wrappedJSObject;
+
+  dump("this._isGlobalActor: " + this._isGlobalActor + "\n");
+  dump("this.window: " + Object.keys(this.window) + "\n");
+  dump("this._window: " + Object.keys(this._window) + "\n");
+  dump("window === _window: " + (this.window === this._window) + "\n");
+
+  dump("windowId: " + WebConsoleUtils.getInnerWindowId(this.window) + "\n");
 
   this._actorPool = new ActorPool(this.conn);
   this.conn.addActorPool(this._actorPool);
@@ -416,7 +439,7 @@ WebConsoleActor.prototype =
     let startedListeners = [];
     let window = !this._isGlobalActor ? this.window : null;
 
-    while (aRequest.listeners.length > 0) {
+    /* while (aRequest.listeners.length > 0) {
       let listener = aRequest.listeners.shift();
       switch (listener) {
         case "PageError":
@@ -457,7 +480,8 @@ WebConsoleActor.prototype =
     return {
       startedListeners: startedListeners,
       nativeConsoleAPI: this.hasNativeConsoleAPI(this.window),
-    };
+    }; */
+   return {};
   },
 
   /**
@@ -948,6 +972,16 @@ WebConsoleActor.prototype =
     if (typeof aOptions.url == "string") {
       evalOptions = { url: aOptions.url };
     }
+
+    dump("dbgWindow: " + Object.keys(dbgWindow) + "\n");
+
+    dump("this.window.toString: " + this.window.toString() + "\n");
+    dump("dbgWindow.toString(): " + dbgWindow.toString() + "\n");
+
+    dump("dbgWindow instanceof Debugger.Object: " + (dbgWindow instanceof Debugger.Object) + "\n");
+    dump("dbgWindow.unsafeDereference: " + dbgWindow.unsafeDereference + "\n");
+
+    dump("dbgWindow.global: " + dbgWindow.global + "\n");
 
     let result;
     if (frame) {
