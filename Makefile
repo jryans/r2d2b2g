@@ -200,7 +200,6 @@ release: addon/$(ADDON_NAME).xpi addon/$(ADDON_NAME).update.rdf
 	chmod 664 addon/$(ADDON_NAME).xpi addon/$(ADDON_NAME).update.rdf
 	scp -p addon/$(ADDON_NAME).xpi $(SSH_USER)@stage.mozilla.org:$(FTP_ROOT_PATH)/$(UPDATE_PATH)/$(XPI_NAME)
 	ssh $(SSH_USER)@stage.mozilla.org 'cd $(FTP_ROOT_PATH)/$(UPDATE_PATH)/ && ln -fs $(XPI_NAME) $(ADDON_NAME)-$(B2G_PLATFORM)-latest.xpi'
-	scp -p addon/$(ADDON_NAME).update.rdf $(SSH_USER)@stage.mozilla.org:$(FTP_ROOT_PATH)/$(UPDATE_PATH)/update.rdf
 
 test:
 	cd addon-sdk && . bin/activate && cd ../addon && cfx test --verbose --templatedir template/ $(BIN_ARG) $(TEST_ARG) $(PROFILE_ARG)
