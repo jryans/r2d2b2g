@@ -36,6 +36,10 @@ Subprocess.registerDebugHandler(
   function(s) console.debug("subprocess: " + s.trim())
 );
 
+function debug(msg) {
+  console.debug(Self.id + ": " + msg);
+}
+
 exports.SimulatorProcess = Class({
   extends: EventTarget,
   initialize: function initialize(options) {
@@ -52,8 +56,11 @@ exports.SimulatorProcess = Class({
    * Start the process and connect the debugger client.
    */
   run: function () Task.spawn((function () {
+    debug("Attempting to run");
+
     // kill before start if already running
     if (this.process != null) {
+      debug("Already running, killing");
       yield this.process.kill();
     }
 
@@ -100,6 +107,9 @@ exports.SimulatorProcess = Class({
     }
 
     // spawn a b2g instance
+    debug("Spawning b2g process");
+    debug("Arguments: " + this.b2gArguments);
+    debug("Environment: " + environment);
     this.process = Subprocess.call({
       command: b2gExecutable,
       arguments: this.b2gArguments,
@@ -125,7 +135,7 @@ exports.SimulatorProcess = Class({
     });
 
     throw new Task.Result();
-  }).bind(this)),
+  }).bind(this)).then(null, debug),
 
   // request a b2g instance kill
   kill: function() {
@@ -153,13 +163,16 @@ exports.SimulatorProcess = Class({
 
   // compute current b2g file handle
   get b2gExecutable() {
+    debug("Trying to find b2g binary");
     if (this._executable) {
+      debug("Already found b2g at " + this._executable.path);
       return this._executable;
     }
 
     if (Prefs.customRuntime) {
       this._executable = Prefs.customRuntime;
       this._executableFilename = "Custom runtime";
+      debug("Using custom b2g at " + this._executable.path);
       return this._executable;
     }
 
@@ -176,6 +189,7 @@ exports.SimulatorProcess = Class({
     let executable = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
     executable.initWithPath(path);
     let executableFilename = executables[Runtime.OS];
+    debug("Looking for b2g at " + executable.path);
 
     // Support B2G binaries built without GAIADIR.
     if (!executable.exists()) {
@@ -189,6 +203,7 @@ exports.SimulatorProcess = Class({
       let path = URL.toFilename(url);
       executable.initWithPath(path);
       executableFilename = executables[Runtime.OS];
+      debug("Looking for b2g at " + executable.path);
     }
 
     if (!executable.exists()) {
@@ -198,6 +213,7 @@ exports.SimulatorProcess = Class({
 
     this._executable = executable;
     this._executableFilename = executableFilename;
+    debug("Found b2g successfully at " + executable.path);
 
     return executable;
   },
